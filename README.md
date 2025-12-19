@@ -69,17 +69,16 @@
 
 <div align="left">
   <a href="mailto:ricocandel4@gmail.com">
-    <img src="https://img.shields.io/static/v1?message=Gmail&logo=gmail&color=D14836&logoColor=white&style=for-the-badge" height="35" />
+    <img src="https://img.shields.io/static/v1?label=&message=Gmail&logo=gmail&color=D14836&logoColor=white&style=for-the-badge" height="35" />
   </a>
 
-  <a href="https://www.linkedin.com/in/candela-celeste-rico-069552383/">
-    <img src="https://img.shields.io/static/v1?message=LinkedIn&logo=linkedin&color=0077B5&logoColor=white&style=for-the-badge" height="35" />
+  <a href="https://www.linkedin.com/in/candela-celeste-rico-069552383/" target="_blank">
+    <img src="https://img.shields.io/static/v1?label=&message=LinkedIn&logo=linkedin&color=0077B5&logoColor=white&style=for-the-badge" height="35" />
   </a>
 
   <a href="mailto:carico@uade.com">
-    <img src="https://img.shields.io/static/v1?message=Outlook&logo=microsoft-outlook&color=0078D4&logoColor=white&style=for-the-badge" height="35" />
+    <img src="https://img.shields.io/static/v1?label=&message=Outlook&logo=microsoft-outlook&color=0078D4&logoColor=white&style=for-the-badge" height="35" />
   </a>
-  
 </div>
 
 ###
