@@ -1,0 +1,12 @@
+{
+  "title": "Language Stack",
+  "_comment": "Self-rated, 0-100. Edit these and the Charts workflow redraws it.",
+  "axes": [
+    { "label": "Java",       "value": 80 },
+    { "label": "Python",     "value": 75 },
+    { "label": "TypeScript", "value": 70 },
+    { "label": "JavaScript", "value": 75 },
+    { "label": "SQL",        "value": 78 },
+    { "label": "HTML / CSS", "value": 80 }
+  ]
+}
