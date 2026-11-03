@@ -239,6 +239,47 @@ def render_stats(user, stats, theme):
     return frame(W, H, c, "".join(out), f"{user} GitHub statistics")
 
 
+def render_languages(user, langs, theme):
+    """langs: list of (name, bytes) sorted desc. Stacked bar plus 2-col legend."""
+    c = THEMES[theme]
+    pad, W = 22, 480
+    total = sum(b for _, b in langs) or 1
+    rows = (len(langs) + 1) // 2
+    H = pad + 78 + (rows - 1) * 22 + pad
+
+    out = [
+        f'<text x="{pad}" y="{pad + 14}" font-size="15" font-weight="700" '
+        f'fill="{c["title"]}">Most used languages</text>',
+        f'<text x="{W - pad}" y="{pad + 14}" font-size="11" text-anchor="end" '
+        f'fill="{c["muted"]}">by bytes, own repos</text>',
+        f'<line x1="{pad}" y1="{pad + 26}" x2="{W - pad}" y2="{pad + 26}" '
+        f'stroke="{c["border"]}"/>',
+    ]
+    bar_y, bar_w = pad + 42, W - 2 * pad
+    out.append(f'<clipPath id="bar"><rect x="{pad}" y="{bar_y}" width="{bar_w}" '
+               f'height="10" rx="5"/></clipPath><g clip-path="url(#bar)">')
+    x = pad
+    for name, b in langs:
+        w = bar_w * b / total
+        out.append(f'<rect x="{x:.2f}" y="{bar_y}" width="{w + 0.5:.2f}" height="10" '
+                   f'fill="{LANG_COLOR.get(name, c["muted"])}"/>')
+        x += w
+    out.append("</g>")
+
+    top = bar_y + 36
+    colw = bar_w / 2
+    for i, (name, b) in enumerate(langs):
+        cx = pad + (i % 2) * colw
+        cy = top + (i // 2) * 22
+        out.append(f'<circle cx="{cx + 5:.0f}" cy="{cy - 4}" r="5" '
+                   f'fill="{LANG_COLOR.get(name, c["muted"])}"/>')
+        out.append(f'<text x="{cx + 16:.0f}" y="{cy}" font-size="12" '
+                   f'fill="{c["text"]}">{esc(name)}</text>')
+        out.append(f'<text x="{cx + colw - 14:.0f}" y="{cy}" font-size="12" '
+                   f'text-anchor="end" fill="{c["muted"]}">{100 * b / total:.1f}%</text>')
+    return frame(W, H, c, "".join(out), f"{user} most used languages")
+
+
 def render_repo(repo, theme):
     c = THEMES[theme]
     W, H = 420, 132
@@ -325,6 +366,22 @@ def main(argv=None):
         dest = args.out / f"card-stats-{theme}.svg"
         dest.write_text(render_stats(args.user, tiles, theme), encoding="utf-8")
     print(f"wrote card-stats-*.svg  ({len(tiles)} tiles)")
+
+    # Language breakdown from the REST languages endpoint (works with the
+    # built-in GITHUB_TOKEN, unlike lowlighter/metrics which needs a PAT).
+    totals: dict[str, int] = {}
+    for r in owned:
+        try:
+            for name, b in rest(f"/repos/{r['full_name']}/languages", token).items():
+                totals[name] = totals.get(name, 0) + b
+        except urllib.error.HTTPError as e:
+            print(f"  languages for {r['name']} unavailable (HTTP {e.code})", file=sys.stderr)
+    langs = sorted(totals.items(), key=lambda kv: -kv[1])[:8]
+    if langs:
+        for theme in ("dark", "light"):
+            dest = args.out / f"card-langs-{theme}.svg"
+            dest.write_text(render_languages(args.user, langs, theme), encoding="utf-8")
+        print(f"wrote card-langs-*.svg  ({', '.join(n for n, _ in langs)})")
 
     if not args.projects.exists():
         print(f"no {args.projects}, skipping repo cards")

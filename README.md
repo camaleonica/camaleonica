@@ -96,7 +96,11 @@ I build things to understand how they work.
 
 <br>
 
-<img src="assets/metrics.languages.svg" height="165" alt="most used languages">
+<picture>
+  <source media="(prefers-color-scheme: dark)"  srcset="assets/card-langs-dark.svg">
+  <source media="(prefers-color-scheme: light)" srcset="assets/card-langs-light.svg">
+  <img src="assets/card-langs-dark.svg" width="480" alt="most used languages">
+</picture>
 
 </div>
 
